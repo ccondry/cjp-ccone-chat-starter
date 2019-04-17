@@ -62,16 +62,36 @@
         // get customer phone number from query string
         return this.query.get('phone')
       },
-      data0 () => this.query.get('data0'),
-      data1 () => this.query.get('data1'),
-      data2 () => this.query.get('data2'),
-      data3 () => this.query.get('data3'),
-      data4 () => this.query.get('data4'),
-      data5 () => this.query.get('data5'),
-      data6 () => this.query.get('data6'),
-      data7 () => this.query.get('data7'),
-      data8 () => this.query.get('data8'),
-      data9 () => this.query.get('data9'),
+      data0 () {
+        return this.query.get('data0')
+      },
+      data1 () {
+        return this.query.get('data1')
+      },
+      data2 () {
+        return this.query.get('data2')
+      },
+      data3 () {
+        return this.query.get('data3')
+      },
+      data4 () {
+        return this.query.get('data4')
+      },
+      data5 () {
+        return this.query.get('data5')
+      },
+      data6 () {
+        return this.query.get('data6')
+      },
+      data7 () {
+        return this.query.get('data7')
+      },
+      data8 () {
+        return this.query.get('data8')
+      },
+      data9 () {
+        return this.query.get('data9')
+      },
       encodedCustomerData () {
         // encode the customer data to stuff into form value
         return JSON.stringify(this.customerData).replace(/\"/g, '&quote;')
@@ -110,7 +130,7 @@
         ]
       },
       action () {
-        // not sure what this is yet
+        // action 102 means start chat
         return '102'
       },
       screenResolution () {
