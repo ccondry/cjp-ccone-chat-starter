@@ -62,6 +62,16 @@
         // get customer phone number from query string
         return this.query.get('phone')
       },
+      data0 () => this.query.get('data0'),
+      data1 () => this.query.get('data1'),
+      data2 () => this.query.get('data2'),
+      data3 () => this.query.get('data3'),
+      data4 () => this.query.get('data4'),
+      data5 () => this.query.get('data5'),
+      data6 () => this.query.get('data6'),
+      data7 () => this.query.get('data7'),
+      data8 () => this.query.get('data8'),
+      data9 () => this.query.get('data9'),
       encodedCustomerData () {
         // encode the customer data to stuff into form value
         return JSON.stringify(this.customerData).replace(/\"/g, '&quote;')
@@ -85,16 +95,16 @@
           {key: 'traversalHistory', value: ''},
           {key: 'customerId', value: ''},
           {key: 'groupId', value: ''},
-          {key: 'data0', value: 'something'},
-          {key: 'data1', value: 'something else'},
-          {key: 'data2', value: ''},
-          {key: 'data3', value: ''},
-          {key: 'data4', value: ''},
-          {key: 'data5', value: ''},
-          {key: 'data6', value: ''},
-          {key: 'data7', value: ''},
-          {key: 'data8', value: ''},
-          {key: 'data9', value: ''},
+          {key: 'data0', value: this.data0 || 'something'},
+          {key: 'data1', value: this.data1 || 'something else'},
+          {key: 'data2', value: this.data2 || ''},
+          {key: 'data3', value: this.data3 || ''},
+          {key: 'data4', value: this.data4 || ''},
+          {key: 'data5', value: this.data5 || ''},
+          {key: 'data6', value: this.data6 || ''},
+          {key: 'data7', value: this.data7 || ''},
+          {key: 'data8', value: this.data8 || ''},
+          {key: 'data9', value: this.data9 || ''},
           // chat is 3, video is 4
           {key: 'channelId', value: '3'}
         ]
