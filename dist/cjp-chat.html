@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CCOne</title>
+  <!-- Vue.js -->
+  <script src="https://unpkg.com/vue"></script>
+</head>
+<body>
+  <div id="app">
+    <form ref="form" action="https://mm.ccone.net:443/chat-adapter/mdv9.dll/bin/Chat.do" method="POST">
+      <input type="hidden" name="action" v-model="action" />
+      <input type="hidden" name="custData" v-model="encodedCustomerData"/>
+      <input type="hidden" name="tenantId" v-model="tenantId" />
+      <input type="hidden" name="osName" v-model="osName" />
+      <input type="hidden" name="osVersion" v-model="osVersion" />
+      <input type="hidden" name="browserName" v-model="browser" />
+      <input type="hidden" name="browserVersion" v-model="browserVersion"/>
+      <input type="hidden" name="screenResolution" v-model="screenResolution"/>
+      <input type="hidden" name="isMobile" v-model="isMobile"/>
+    </form>
+  </div>
+
+  <script>
+  const app = new Vue({
+    el: '#app',
+    data () {
+      return {
+      }
+    },
+    mounted () {
+      // start the chat
+      this.$refs.form.submit()
+    },
+    computed: {
+      query () {
+        // the query string
+        return new URLSearchParams(window.location.search)
+      },
+      question () {
+        // get customer's question text from query string
+        return this.query.get('question')
+      },
+      reasonId () {
+        // get chat reason ID from query string
+        // this determines which queue on the tenant
+        return this.query.get('reasonId')
+      },
+      tenantId () {
+        // get tenant ID from query string
+        // this is the tenant ID on CJP side
+        return this.query.get('tenantId')
+      },
+      email () {
+        // get customer email from query string
+        return this.query.get('email')
+      },
+      name () {
+        // get customer name from query string
+        return this.query.get('name')
+      },
+      phone () {
+        // get customer phone number from query string
+        return this.query.get('phone')
+      },
+      encodedCustomerData () {
+        // encode the customer data to stuff into form value
+        return JSON.stringify(this.customerData).replace(/\"/g, '&quote;')
+      },
+      customerData () {
+        // the customer's data and reason ID
+        return [
+          {key: 'custname', value: this.name},
+          {key: 'mobilenum', value: this.phone},
+          {key: 'emailid', value: this.email},
+          {key: 'question', value: this.question},
+          {key: 'reason', value: this.reasonId},
+          {key: 'sendtranscript', value: 'false'},
+          {key: 'CUSTOM_MESSAGE', value: 'Unable to process your request.'},
+          {key: 'SHOW_EXCEPTION_DETAILS', value: 'false'},
+          {key: 'REQUEST-ID', value: '0'},
+          {key: 'sourceUrl', value: ''},
+          {key: 'chatRsnSelMode', value: ''},
+          {key: 'websitePkey', value: ''},
+          {key: 'defaultChatReason', value: ''},
+          {key: 'traversalHistory', value: ''},
+          {key: 'customerId', value: ''},
+          {key: 'groupId', value: ''},
+          {key: 'data0', value: 'something'},
+          {key: 'data1', value: 'something else'},
+          {key: 'data2', value: ''},
+          {key: 'data3', value: ''},
+          {key: 'data4', value: ''},
+          {key: 'data5', value: ''},
+          {key: 'data6', value: ''},
+          {key: 'data7', value: ''},
+          {key: 'data8', value: ''},
+          {key: 'data9', value: ''},
+          // chat is 3, video is 4
+          {key: 'channelId', value: '3'}
+        ]
+      },
+      action () {
+        // not sure what this is yet
+        return '102'
+      },
+      screenResolution () {
+        // screen size
+        let screenSize = ''
+        if (screen.width) {
+          width = (screen.width) ? screen.width : ''
+          height = (screen.height) ? screen.height : ''
+          screenSize += '' + width + " x " + height
+        }
+        return screenSize
+      },
+      osName () {
+        // operating system
+        let os = 'UNKNOWN'
+        let clientStrings = [
+          {s: 'Windows 3.11', r: /Win16/},
+          {s: 'Windows 95', r: /(Windows 95|Win95|Windows_95)/},
+          {s: 'Windows ME', r: /(Win 9x 4.90|Windows ME)/},
+          {s: 'Windows 98', r: /(Windows 98|Win98)/},
+          {s: 'Windows CE', r: /Windows CE/},
+          {s: 'Windows 2000', r: /(Windows NT 5.0|Windows 2000)/},
+          {s: 'Windows XP', r: /(Windows NT 5.1|Windows XP)/},
+          {s: 'Windows Server 2003', r: /Windows NT 5.2/},
+          {s: 'Windows Vista', r: /Windows NT 6.0/},
+          {s: 'Windows 7', r: /(Windows 7|Windows NT 6.1)/},
+          {s: 'Windows 8.1', r: /(Windows 8.1|Windows NT 6.3)/},
+          {s: 'Windows 8', r: /(Windows 8|Windows NT 6.2)/},
+          {s: 'Windows NT 4.0', r: /(Windows NT 4.0|WinNT4.0|WinNT|Windows NT)/},
+          {s: 'Windows ME', r: /Windows ME/},
+          {s: 'Android', r: /Android/},
+          {s: 'Open BSD', r: /OpenBSD/},
+          {s: 'Sun OS', r: /SunOS/},
+          {s: 'Linux', r: /(Linux|X11)/},
+          {s: 'iOS', r: /(iPhone|iPad|iPod)/},
+          {s: 'Mac OS X', r: /Mac OS X/},
+          {s: 'Mac OS', r: /(MacPPC|MacIntel|Mac_PowerPC|Macintosh)/},
+          {s: 'QNX', r: /QNX/},
+          {s: 'UNIX', r: /UNIX/},
+          {s: 'BeOS', r: /BeOS/},
+          {s: 'OS/2', r: /OS\/2/},
+          {s: 'Search Bot', r: /(nuhk|Googlebot|Yammybot|Openbot|Slurp|MSNBot|Ask Jeeves\/Teoma|ia_archiver)/}
+        ]
+        for (let id in clientStrings) {
+          let cs = clientStrings[id]
+          if (cs.r.test(this.userAgent)) {
+            // found client string
+            return cs.s
+          }
+        }
+      },
+      browser () {
+        // customer's browser type
+        return window.navigator.appName
+      },
+      userAgent () {
+        // customer's browser user agent
+        return window.navigator.userAgent
+      },
+      browserVersion () {
+        // customer's browser version
+        return window.navigator.appVersion
+      },
+      isMobile () {
+        // is customer's browser on mobile device?
+        return /Mobile|mini|Fennec|Android|iP(ad|od|hone)/.test(this.browserVersion)
+      },
+      osVersion () {
+        // customer's computer operating system
+        let osVersion = 'UNKNOWN'
+
+        if (/Windows/.test(this.osName)) {
+          osVersion = /Windows (.*)/.exec(this.osName)[1]
+          // os = 'Windows';
+        }
+
+        switch (this.osName) {
+          case 'Mac OS X':
+          osVersion = /Mac OS X (10[\.\_\d]+)/.exec(this.userAgent)[1]
+          break
+
+          case 'Android':
+          osVersion = /Android ([\.\_\d]+)/.exec(this.userAgent)[1]
+          break
+
+          case 'iOS':
+          osVersion = /OS (\d+)_(\d+)_?(\d+)?/.exec(this.browserVersion)
+          osVersion = osVersion[1] + '.' + osVersion[2] + '.' + (osVersion[3] | 0)
+          break
+        }
+        return osVersion
+      }
+    }
+  })
+</script>
+</body>
+</html>

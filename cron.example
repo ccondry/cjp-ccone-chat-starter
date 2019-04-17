@@ -1,0 +1,1 @@
+*/1 * * * * /bin/sh -c 'cd /opt/dcloud/cjp-ccone-chat-starter && ./update.sh' 2>&1 | /usr/bin/logger -t cron-update-cjp-ccone-chat-starter
